@@ -80,6 +80,10 @@ var Puppy = (function(){
     }
   }
 
+  var performRequest = function(callback){
+
+  }
+
   return {
     cacheElements: cacheElements,
     updatePuppyList: updatePuppyList,
