@@ -15,24 +15,46 @@ var Puppy = (function(){
 
   // performRequest is a wrapper to allow us to display progress information to the user
   // without having to repeat this code
-  var performRequest = function(callback){
-    // Display the waiting message
-    // Set a 1s timeout to display the 'sorry it's taking so long message'
-    // Run the callback function
-    // If it was successful, display success message
-    // If it wasn't, display error message.
+  // var performRequest = function(callback){
+  //   // Display the waiting message
+  //   // Set a 1s timeout to display the 'sorry it's taking so long message'
+  //   // Run the callback function
+  //   // If it was successful, display success message
+  //   // If it wasn't, display error message.
 
-    console.log("Waiting");
-    var wrappedCallback = promiseWrapper(callback);
+  //   console.log("Waiting");
+  //   var wrappedCallback = promiseWrapper(callback);
 
-    wrappedCallback.done( function(){
-      alert("Promise Success!");
-    });
+  //   wrappedCallback.done( function(){
+  //     alert("Promise Success!");
+  //   });
 
-    wrappedCallback.fail( function(){
-      alert("Promise Failed...");
-    });
+  //   wrappedCallback.fail( function(){
+  //     alert("Promise Failed...");
+  //   });
 
+  // }
+
+  var setupAjax = function(){
+    var apologyMessage;
+    $(document).ajaxStart(function(){
+      console.log("Waiting")
+      apologyMessage = setTimeout(function(){
+        console.log("Sorry this is taking so long")
+      }, 1000)
+    })
+    $(document).ajaxSuccess(function(){
+      console.log("Finished")
+    })
+    $(document).ajaxError(function(){
+      console.log("Failed. Errors Are Below")
+    })
+    $(document).ajaxComplete(function(){
+      setTimeout(function(){
+        console.log("Fade out")
+      }, 2000)
+      clearTimeout(apologyMessage)
+    })
   }
 
   var promiseWrapper = function(callback){
@@ -90,15 +112,15 @@ var Puppy = (function(){
     })
   }
 
-  var registerPuppy = function(callbackPromise){
+  var registerPuppy = function(){
     $.ajax({
       url: 'https://pacific-stream-9205.herokuapp.com/puppies.json',
       type: 'post',
       data: JSON.stringify({breed_id: $puppyBreed.val(), name: $puppyName.val()}),
       contentType: 'application/json',
       dataType: 'json',
-      success: function(){ updatePuppyList(); console.log("Success!"); callbackPromise.resolve();},
-      error: function(xhr){ displayPuppyErrors(JSON.parse(xhr.responseText)); console.log("ERROR!!!!!!"); callbackPromise.reject();}
+      success: function(){ updatePuppyList(); console.log("Success!");},
+      error: function(xhr){ displayPuppyErrors(JSON.parse(xhr.responseText)); console.log("ERROR!!!!!!");}
     });
   }
 
@@ -119,5 +141,6 @@ var Puppy = (function(){
     getBreeds: getBreeds,
     registerPuppy: registerPuppy,
     performRequest: performRequest,
+    setupAjax: setupAjax
   };
 })($);
