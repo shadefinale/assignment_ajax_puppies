@@ -1,24 +1,37 @@
 var Puppy = (function(){
-  var $puppyList;
-  var $breedsList;
-  var $puppyName;
-  var $puppyBreed;
+  var $puppyList,
+      $breedsList,
+      $puppyName,
+      $puppyBreed,
+      $puppyErrors;
+
 
   var cacheElements = function(){
      $puppyList = $("#puppy-list");
      $breedsList = $("#new-puppy-breed");
      $puppyName = $("#new-puppy-name");
      $puppyBreed = $("#new-puppy-breed");
+     $puppyErrors = $("#new-puppy-errors");
   }
 
+  // With our response, take the list of objects, turn them into nicer puppy objects,
+  // Sort them by creation date, and for each puppy object, append it to our list.
   var updatePuppyList = function(){
     $.get("https://pacific-stream-9205.herokuapp.com/puppies.json", function(xhr){
-      $puppyList.empty();
-      xhr.map(function(el){ return puppify(el) }).reverse().forEach(function(puppy){
+      xhr.map(function(el){ return puppify(el) }).sort(function(p1, p2){return creationDate(p1, p2)}).forEach(function(puppy){
         $("<li>" + puppy.toText() + "</li>").appendTo($puppyList);
       })
+      // If chrome would update to the next version that came out 3 days ago we could use arrow notation
+      // xhr.map( el => puppify(el)).sort((p1, p2) => creationDate(p1, p2)).forEach(function(puppy){
+      //   $("<li>" + puppy.toText() + "</li>").appendTo($puppyList);
+      // })
     });
   }
+
+  var creationDate = function(p1, p2){
+    return new Date(p2.createdAt) - new Date(p1.createdAt)
+  }
+
 
   var puppify = function(el){
     var puppyObject = {};
@@ -47,8 +60,16 @@ var Puppy = (function(){
       data: JSON.stringify({breed_id: $puppyBreed.val(), name: $puppyName.val()}),
       contentType: 'application/json',
       dataType: 'json',
-      success: function(){ console.log("Success!")}
+      success: function(){ updatePuppyList(); console.log("Success!")},
+      error: function(xhr){ displayPuppyErrors(JSON.parse(xhr.responseText)); console.log("ERROR!!!!!!") }
     });
+  }
+
+  var displayPuppyErrors = function(errorObj){
+    $puppyErrors.empty();
+    for (key in errorObj){
+      $("<li>" + key + " error: " + errorObj[key] + "</li>").appendTo($puppyErrors);
+    }
   }
 
   return {
