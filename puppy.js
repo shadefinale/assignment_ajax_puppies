@@ -13,6 +13,35 @@ var Puppy = (function(){
      $puppyErrors = $("#new-puppy-errors");
   }
 
+  // performRequest is a wrapper to allow us to display progress information to the user
+  // without having to repeat this code
+  var performRequest = function(callback){
+    // Display the waiting message
+    // Set a 1s timeout to display the 'sorry it's taking so long message'
+    // Run the callback function
+    // If it was successful, display success message
+    // If it wasn't, display error message.
+
+    console.log("Waiting");
+    var wrappedCallback = promiseWrapper(callback);
+
+    wrappedCallback.done( function(){
+      alert("Promise Success!");
+    });
+
+    wrappedCallback.fail( function(){
+      alert("Promise Failed...");
+    });
+
+  }
+
+  var promiseWrapper = function(callback){
+    var callbackPromise = $.Deferred();
+    Puppy[callback](callbackPromise);
+
+    return callbackPromise.promise();
+  }
+
   // With our response, take the list of objects, turn them into nicer puppy objects,
   // Sort them by creation date, and for each puppy object, append it to our list.
   var updatePuppyList = function(){
@@ -61,15 +90,15 @@ var Puppy = (function(){
     })
   }
 
-  var registerPuppy = function(){
+  var registerPuppy = function(callbackPromise){
     $.ajax({
       url: 'https://pacific-stream-9205.herokuapp.com/puppies.json',
       type: 'post',
       data: JSON.stringify({breed_id: $puppyBreed.val(), name: $puppyName.val()}),
       contentType: 'application/json',
       dataType: 'json',
-      success: function(){ updatePuppyList(); console.log("Success!")},
-      error: function(xhr){ displayPuppyErrors(JSON.parse(xhr.responseText)); console.log("ERROR!!!!!!") }
+      success: function(){ updatePuppyList(); console.log("Success!"); callbackPromise.resolve();},
+      error: function(xhr){ displayPuppyErrors(JSON.parse(xhr.responseText)); console.log("ERROR!!!!!!"); callbackPromise.reject();}
     });
   }
 
@@ -84,6 +113,7 @@ var Puppy = (function(){
     cacheElements: cacheElements,
     updatePuppyList: updatePuppyList,
     getBreeds: getBreeds,
-    registerPuppy: registerPuppy
+    registerPuppy: registerPuppy,
+    performRequest: performRequest,
   };
 })($);
