@@ -1,7 +1,5 @@
 PuppyHandler = (function(){
   var updatePuppyButton;
-  var newPuppyName;
-  var newPuppyBreed;
   var newPuppySubmit;
 
   function initialize(){
@@ -10,13 +8,14 @@ PuppyHandler = (function(){
 
   function setupPuppyHandlers(){
     updatePuppyButton = $("#update-puppies");
-    newPuppyName = $("#new-puppy-name");
-    newPuppyBreed = $("#new-puppy-breed");
     newPuppySubmit = $("#new-puppy-submit");
-
     updatePuppyButton.click(function(evt){
       evt.preventDefault();
       Puppy.updatePuppyList();
+    })
+    newPuppySubmit.click(function(evt){
+      evt.preventDefault();
+      Puppy.registerPuppy();
     })
   }
 
@@ -26,8 +25,10 @@ PuppyHandler = (function(){
 
 })(Puppy);
 
+
 $(document).ready(function(){
   Puppy.cacheElements();
+  Puppy.getBreeds();
   PuppyHandler.initialize();
 
 })

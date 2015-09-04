@@ -1,8 +1,14 @@
 var Puppy = (function(){
   var puppyList;
+  var breedsList;
+  var puppyName;
+  var puppyBreed;
 
   var cacheElements = function(){
      puppyList = $("#puppy-list");
+     breedsList = $("#new-puppy-breed");
+     puppyName = $("#new-puppy-name");
+     puppyBreed = $("#new-puppy-breed");
   }
 
   var updatePuppyList = function(){
@@ -24,8 +30,23 @@ var Puppy = (function(){
     return puppyObject;
   }
 
+  var getBreeds = function(){
+    var breeds = {};
+    $.get("https://pacific-stream-9205.herokuapp.com/breeds.json", function(xhr){
+      xhr.forEach(function(breed){
+        $("<option value='" + breed.id + "'>" + breed.name + "</option>").appendTo(breedsList);
+      })
+    })
+  }
+
+  var registerPuppy = function(){
+    $.post('https://pacific-stream-9205.herokuapp.com/puppies.json', $.param({breed_id: puppyBreed.val(), name: puppyName.text}))
+  }
+
   return {
     cacheElements: cacheElements,
     updatePuppyList: updatePuppyList,
+    getBreeds: getBreeds,
+    registerPuppy: registerPuppy
   };
 })($);
