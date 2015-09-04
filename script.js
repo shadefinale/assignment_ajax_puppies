@@ -16,7 +16,7 @@ PuppyHandler = (function(){
     $newPuppySubmit = $("#new-puppy-submit");
     $newPuppySubmit.click(function(evt){
       evt.preventDefault();
-      Puppy.registerPuppy();
+      Puppy.performRequest('registerPuppy');
     })
   }
 
