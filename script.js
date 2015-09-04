@@ -1,19 +1,20 @@
 PuppyHandler = (function(){
-  var updatePuppyButton;
-  var newPuppySubmit;
+  var $updatePuppyButton;
+  var $newPuppySubmit;
 
   function initialize(){
     setupPuppyHandlers();
   }
 
   function setupPuppyHandlers(){
-    updatePuppyButton = $("#update-puppies");
-    newPuppySubmit = $("#new-puppy-submit");
-    updatePuppyButton.click(function(evt){
+    $updatePuppyButton = $("#update-puppies");
+    $updatePuppyButton.click(function(evt){
       evt.preventDefault();
       Puppy.updatePuppyList();
     })
-    newPuppySubmit.click(function(evt){
+
+    $newPuppySubmit = $("#new-puppy-submit");
+    $newPuppySubmit.click(function(evt){
       evt.preventDefault();
       Puppy.registerPuppy();
     })
