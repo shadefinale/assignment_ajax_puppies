@@ -13,7 +13,8 @@ var Puppy = (function(){
 
   var updatePuppyList = function(){
     $.get("https://pacific-stream-9205.herokuapp.com/puppies.json", function(xhr){
-      xhr.map(function(el){ return puppify(el) }).forEach(function(puppy){
+      $puppyList.empty();
+      xhr.map(function(el){ return puppify(el) }).reverse().forEach(function(puppy){
         $("<li>" + puppy.toText() + "</li>").appendTo($puppyList);
       })
     });
@@ -25,7 +26,7 @@ var Puppy = (function(){
     puppyObject.name = el.name;
     puppyObject.createdAt = el.created_at;
     puppyObject.toText = function(){
-      return "" + this.name + " (" + this.breed + ") created " + this.createdAt + ".";
+      return "" + this.name + " (" + this.breed + ") created " + new Date(this.createdAt) + ".";
     }
     return puppyObject;
   }
