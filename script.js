@@ -16,7 +16,8 @@ PuppyHandler = (function(){
     $newPuppySubmit = $("#new-puppy-submit");
     $newPuppySubmit.click(function(evt){
       evt.preventDefault();
-      Puppy.performRequest('registerPuppy');
+      Puppy.registerPuppy();
+      // Puppy.performRequest('registerPuppy');
     })
   }
 
@@ -31,5 +32,6 @@ $(document).ready(function(){
   Puppy.cacheElements();
   Puppy.getBreeds();
   PuppyHandler.initialize();
+  Puppy.setupAjax();
 
 })
