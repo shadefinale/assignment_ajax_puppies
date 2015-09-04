@@ -5,7 +5,6 @@ var Puppy = (function(){
       $puppyBreed,
       $puppyErrors;
 
-
   var cacheElements = function(){
      $puppyList = $("#puppy-list");
      $breedsList = $("#new-puppy-breed");
@@ -18,8 +17,17 @@ var Puppy = (function(){
   // Sort them by creation date, and for each puppy object, append it to our list.
   var updatePuppyList = function(){
     $.get("https://pacific-stream-9205.herokuapp.com/puppies.json", function(xhr){
+      $puppyList.empty();
       xhr.map(function(el){ return puppify(el) }).sort(function(p1, p2){return creationDate(p1, p2)}).forEach(function(puppy){
-        $("<li>" + puppy.toText() + "</li>").appendTo($puppyList);
+        var $listElement = $("<li>" + puppy.toText() + "  <a href='#'>Adopt</a></li>").appendTo($puppyList);
+        $listElement.on('click', 'a', function(){
+          $.ajax({url:    'https://pacific-stream-9205.herokuapp.com/puppies/' + puppy.id + '.json',
+                  type:   'delete',
+                  success: function(){
+                    updatePuppyList();
+                    console.log(puppy.name + " was adopted!")
+                 }})
+        })
       })
       // If chrome would update to the next version that came out 3 days ago we could use arrow notation
       // xhr.map( el => puppify(el)).sort((p1, p2) => creationDate(p1, p2)).forEach(function(puppy){
@@ -32,9 +40,9 @@ var Puppy = (function(){
     return new Date(p2.createdAt) - new Date(p1.createdAt)
   }
 
-
   var puppify = function(el){
     var puppyObject = {};
+    puppyObject.id = el.id;
     puppyObject.breed = el.breed.name;
     puppyObject.name = el.name;
     puppyObject.createdAt = el.created_at;
