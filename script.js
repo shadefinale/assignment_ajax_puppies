@@ -8,11 +8,12 @@ PuppyHandler = (function(){
 
   function setupPuppyHandlers(){
     updatePuppyButton = $("#update-puppies");
-    newPuppySubmit = $("#new-puppy-submit");
     updatePuppyButton.click(function(evt){
       evt.preventDefault();
       Puppy.updatePuppyList();
     })
+
+    newPuppySubmit = $("#new-puppy-submit");
     newPuppySubmit.click(function(evt){
       evt.preventDefault();
       Puppy.registerPuppy();

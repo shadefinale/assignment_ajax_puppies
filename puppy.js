@@ -40,7 +40,14 @@ var Puppy = (function(){
   }
 
   var registerPuppy = function(){
-    $.post('https://pacific-stream-9205.herokuapp.com/puppies.json', $.param({breed_id: puppyBreed.val(), name: puppyName.text}))
+    $.ajax({
+      url: 'https://pacific-stream-9205.herokuapp.com/puppies.json',
+      type: 'post',
+      data: JSON.stringify({breed_id: puppyBreed.val(), name: puppyName.val()}),
+      contentType: 'application/json',
+      dataType: 'json',
+      success: function(){ console.log("Success!")}
+    });
   }
 
   return {
