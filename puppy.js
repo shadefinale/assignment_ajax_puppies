@@ -3,7 +3,8 @@ var Puppy = (function(){
       $breedsList,
       $puppyName,
       $puppyBreed,
-      $puppyErrors;
+      $puppyErrors,
+      $statusDiv;
 
   var cacheElements = function(){
      $puppyList = $("#puppy-list");
@@ -11,6 +12,7 @@ var Puppy = (function(){
      $puppyName = $("#new-puppy-name");
      $puppyBreed = $("#new-puppy-breed");
      $puppyErrors = $("#new-puppy-errors");
+     $statusDiv = $("#ajax-notification");
   }
 
   // performRequest is a wrapper to allow us to display progress information to the user
@@ -38,20 +40,27 @@ var Puppy = (function(){
   var setupAjax = function(){
     var apologyMessage;
     $(document).ajaxStart(function(){
-      console.log("Waiting")
+      $statusDiv.slideDown();
+      $statusDiv.removeClass("success error");
+      $statusDiv.addClass("waiting");
+      $statusDiv.text("Waiting");
       apologyMessage = setTimeout(function(){
-        console.log("Sorry this is taking so long")
+        $statusDiv.text("Sorry, still waiting...");
       }, 1000)
     })
     $(document).ajaxSuccess(function(){
-      console.log("Finished")
+      $statusDiv.removeClass("error waiting");
+      $statusDiv.addClass("success");
+      $statusDiv.text("Finished")
     })
     $(document).ajaxError(function(){
-      console.log("Failed. Errors Are Below")
+      $statusDiv.removeClass("success waiting");
+      $statusDiv.addClass("error");
+      $statusDiv.text("Failed. Errors Are Below")
     })
     $(document).ajaxComplete(function(){
       setTimeout(function(){
-        console.log("Fade out")
+        $statusDiv.fadeOut();
       }, 2000)
       clearTimeout(apologyMessage)
     })

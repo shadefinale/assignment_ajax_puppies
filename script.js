@@ -31,7 +31,8 @@ PuppyHandler = (function(){
 $(document).ready(function(){
   Puppy.cacheElements();
   Puppy.getBreeds();
-  PuppyHandler.initialize();
   Puppy.setupAjax();
+  PuppyHandler.initialize();
+  FILES.initializeFileListener();
 
 })

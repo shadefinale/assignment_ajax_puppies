@@ -1,1 +1,26 @@
-style.css
+#ajax-notification {
+  color : #DDD;
+  /*background-color: green;*/
+  text-align: center;
+  line-height: 50px;
+  width : 50%;
+  margin: 0 auto;
+  height: 50px;
+  font-size: 3em;
+  display: none;
+  -webkit-text-stroke: 1px black;
+  text-stroke: 1px black;
+
+}
+
+.waiting {
+  background-color: yellow;
+}
+
+.success {
+  background-color: green;
+}
+
+.error {
+  background-color: red;
+}
